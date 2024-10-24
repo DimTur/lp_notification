@@ -15,8 +15,7 @@ type Server struct {
 type TelegramBot struct {
 	TgBotToken string `yaml:"tg_bot_token"`
 	TgBotHost  string `yaml:"tg_bot_host"`
-	// TgBotLink  string `yaml:"tg_bot_link"`
-	BatchSize int `yaml:"batch_size"`
+	BatchSize  int    `yaml:"batch_size"`
 }
 
 func Parse(s string) (*Config, error) {
