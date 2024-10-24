@@ -1,0 +1,8 @@
+server:
+  host: "localhost"
+  port: 8003
+telegram_bot:
+  tg_bot_token: "7388737325:AAHYztU7O3Ct4wYt_-bbQZztE2IGE7e30SU"
+  tg_bot_host: "api.telegram.org"
+  # tg_bot_link: "https://t.me/auth_test_dim_tur_bot_v2"
+  batch_size: 100
