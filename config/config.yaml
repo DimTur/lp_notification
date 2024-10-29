@@ -2,6 +2,32 @@ server:
   host: "localhost"
   port: 8003
 telegram_bot:
-  tg_bot_token: "123" # fake data
+  tg_bot_token: "1213" #fake date
   tg_bot_host: "api.telegram.org"
   batch_size: 100
+rabbit_mq:
+  username: guest
+  password: guest
+  host: localhost
+  port: 5672
+  otp_queue:
+    name: otp
+  chat_id_exchange:
+    name: chat_id
+    kind: fanout
+    durable: false
+    auto_deleted: false
+    internal: false
+    no_wait: true
+    args:
+      alternate_exchange: alternate_exchange_chat_id
+  chat_id_queue:
+    name: chat_id
+    durable: false
+    auto_deleted: false
+    exclusive: false
+    no_wait: true
+    args:
+      x_message_ttl: 60000
+  chat_id_routing_key: chat_id
+  

@@ -10,17 +10,13 @@ import (
 	"github.com/DimTur/lp_notification/internal/storage"
 )
 
-type Client struct {
-}
-
 type Storage interface {
 	storage.Storage
 }
 
 func RunTg(
 	ctx context.Context,
-	host string,
-	token string,
+	tgClient *tgclient.TgClient,
 	batchSize int,
 	storage Storage,
 	logger *slog.Logger,
@@ -29,15 +25,9 @@ func RunTg(
 
 	log := logger.With(
 		slog.String("op", op),
-		slog.String("host", host),
 	)
 
-	tgClient, err := tgclient.NewTgClient(host, token, logger)
-	if err != nil {
-		return err
-	}
-
-	eventProcessor := tgevents.New(tgClient, storage, logger)
+	eventProcessor := tgevents.New(ctx, tgClient, storage, logger)
 
 	consumer := eventconsumer.New(ctx, eventProcessor, eventProcessor, batchSize, logger)
 	if err := consumer.Start(); err != nil {

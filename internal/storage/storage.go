@@ -1,7 +1,10 @@
 package storage
 
+import "context"
+
 type Storage interface {
-	SaveUserChatID(userTg *UserTg) error
+	Publish(ctx context.Context, exchange, routingKey string, body []byte) error
+	Consume(ctx context.Context, queueName string, handle func(msg interface{}) error) error
 }
 
 type UserTg struct {

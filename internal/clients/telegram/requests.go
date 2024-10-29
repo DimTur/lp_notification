@@ -24,7 +24,7 @@ func (c *TgClient) Updates(offset int, limit int) (updates []Update, err error) 
 		slog.String("op", op),
 	)
 
-	log.Info("getting updates")
+	// log.Info("getting updates")
 
 	defer func() { err = e.WrapIfErr(log, op, "can't get updates", err) }()
 
@@ -43,7 +43,7 @@ func (c *TgClient) Updates(offset int, limit int) (updates []Update, err error) 
 		return nil, err
 	}
 
-	log.Info("updates got successfully")
+	// log.Info("updates got successfully")
 
 	return res.Result, nil
 }
@@ -53,7 +53,7 @@ func (c *TgClient) SendMessage(chatID int, text string) error {
 
 	log := c.logger.With(
 		slog.String("op", op),
-		slog.Int("sending message to chat id:", chatID),
+		slog.Int("sending message to chat id", chatID),
 	)
 
 	log.Info("sending message")

@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -12,6 +13,7 @@ import (
 )
 
 type Processor struct {
+	ctx     context.Context
 	tg      *telegram.TgClient
 	offset  int
 	storage storage.Storage
@@ -30,11 +32,13 @@ var (
 )
 
 func New(
+	ctx context.Context,
 	client *telegram.TgClient,
 	storage storage.Storage,
 	logger *slog.Logger,
 ) *Processor {
 	return &Processor{
+		ctx:     ctx,
 		tg:      client,
 		storage: storage,
 		logger:  logger,
@@ -48,7 +52,7 @@ func (p *Processor) Fetch(limit int) ([]events.Event, error) {
 		slog.String("op", op),
 	)
 
-	log.Info("fetching events")
+	// log.Info("fetching events")
 
 	updates, err := p.tg.Updates(p.offset, limit)
 	if err != nil {

@@ -19,11 +19,10 @@ func NewTgClient(
 
 	logger *slog.Logger,
 ) (*TgClient, error) {
-	const op = "tg client"
+	const op = "tg_client"
 
 	logger = logger.With(
 		slog.String("op", op),
-		slog.String("host", host),
 	)
 
 	tgClient := &TgClient{
