@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/DimTur/lp_notification/internal/storage"
+	rabbitmq_store "github.com/DimTur/lp_notification/internal/storage/rabbitmq"
 )
 
 const (
@@ -53,7 +53,7 @@ func (p *Processor) saveChatID(username string, chatID int) error {
 	// TODO: delete
 	fmt.Printf("username: %s, chat ID: %s", username, chatIDStr)
 
-	msgUserTg := &storage.UserTg{
+	msgUserTg := &rabbitmq_store.UserTg{
 		TgLink: username,
 		ChatID: chatIDStr,
 	}

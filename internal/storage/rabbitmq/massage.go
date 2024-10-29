@@ -15,3 +15,8 @@ type MsgOTP struct {
 	Otp    OTP `json:"otp"`
 	ChatID int `json:"chat_id"`
 }
+
+type UserTg struct {
+	TgLink string `json:"tg_link"`
+	ChatID string `json:"chat_id"`
+}

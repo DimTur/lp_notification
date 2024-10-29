@@ -44,11 +44,6 @@ func NewServeCmd() *cobra.Command {
 				log.Error("failed init tg client", slog.Any("err", err))
 			}
 
-			// storage, err := rabbitmq_store.NewRabbit()
-			// if err != nil {
-			// 	return err
-			// }
-
 			// Init RabbitMQ
 			rmqUrl := fmt.Sprintf(
 				"amqp://%s:%s@%s:%d/",
