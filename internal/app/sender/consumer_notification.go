@@ -22,8 +22,8 @@ func NewConsumeNotification(
 	msgQueue MessageQueue,
 	tgClient *tgclient.TgClient,
 	logger *slog.Logger,
-) *ConsumeOTP {
-	return &ConsumeOTP{
+) *ConsumeNotification {
+	return &ConsumeNotification{
 		msgQueue: msgQueue,
 		tgClient: tgClient,
 		logger:   logger,
