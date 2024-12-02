@@ -6,39 +6,63 @@ import (
 	"log/slog"
 
 	tgclient "github.com/DimTur/lp_notification/internal/clients/telegram"
-	"github.com/DimTur/lp_notification/internal/storage"
 	rabbitmq_store "github.com/DimTur/lp_notification/internal/storage/rabbitmq"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
+type MessageQueue interface {
+	Consume(
+		ctx context.Context,
+		queueName, consumer string,
+		autoAck, exclusive, noLocal, noWait bool,
+		args map[string]interface{},
+		handle func(ctx context.Context, msg interface{}) error,
+	) error
+}
+
 type ConsumeOTP struct {
-	storage  storage.Storage
+	msgQueue MessageQueue
 	tgClient *tgclient.TgClient
 	logger   *slog.Logger
 }
 
 func NewConsumeOTP(
-	storage storage.Storage,
+	msgQueue MessageQueue,
 	tgClient *tgclient.TgClient,
 	logger *slog.Logger,
 ) *ConsumeOTP {
 	return &ConsumeOTP{
-		storage:  storage,
+		msgQueue: msgQueue,
 		tgClient: tgClient,
 		logger:   logger,
 	}
 }
 
-func (c *ConsumeOTP) Start(ctx context.Context, queueName string) error {
+func (c *ConsumeOTP) Start(
+	ctx context.Context,
+	queueName, consumer string,
+	autoAck, exclusive, noLocal, noWait bool,
+	args map[string]interface{},
+) error {
 	const op = "ConsumeOTP.Start"
 
 	log := c.logger.With(slog.String("op", op))
 	log.Info("Starting to consume OTP messages")
 
-	return c.storage.Consume(ctx, queueName, c.handleMessage)
+	return c.msgQueue.Consume(
+		ctx,
+		queueName,
+		consumer,
+		autoAck,
+		exclusive,
+		noLocal,
+		noWait,
+		args,
+		c.handleMessage,
+	)
 }
 
-func (c *ConsumeOTP) handleMessage(msg interface{}) error {
+func (c *ConsumeOTP) handleMessage(ctx context.Context, msg interface{}) error {
 	// Casting a message to a type amqp.Delivery
 	del, ok := msg.(amqp.Delivery)
 	if !ok {
@@ -47,7 +71,6 @@ func (c *ConsumeOTP) handleMessage(msg interface{}) error {
 	}
 
 	var message rabbitmq_store.MsgOTP
-
 	// Decoding JSON message
 	if err := json.Unmarshal(del.Body, &message); err != nil {
 		c.logger.Error("failed to unmarshal message to MsgOTP", slog.Any("err", err))

@@ -4,5 +4,11 @@ import "context"
 
 type Storage interface {
 	Publish(ctx context.Context, exchange, routingKey string, body []byte) error
-	Consume(ctx context.Context, queueName string, handle func(msg interface{}) error) error
+	Consume(
+		ctx context.Context,
+		queueName, consumer string,
+		autoAck, exclusive, noLocal, noWait bool,
+		args map[string]interface{},
+		handle func(ctx context.Context, msg interface{}) error,
+	) error
 }

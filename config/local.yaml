@@ -2,7 +2,7 @@ server:
   host: "localhost"
   port: 8003
 telegram_bot:
-  tg_bot_token: "123" #fake date
+  tg_bot_token: "7388737325:AAHYztU7O3Ct4wYt_-bbQZztE2IGE7e30SU" #fake date
   tg_bot_host: "api.telegram.org"
   batch_size: 100
 rabbit_mq:
@@ -13,6 +13,32 @@ rabbit_mq:
   otp:
     otp_queue:
       name: otp
+      durable: false
+      auto_deleted: false
+      exclusive: false
+      no_wait: true
+      args:
+        x_message_ttl: 60000
+    otp_exchange:
+      name: otp
+      kind: fanout
+      durable: false
+      auto_deleted: false
+      internal: false
+      no_wait: true
+      args:
+        alternate_exchange: alternate_exchange_otp
+    otp_consumer:
+      queue: otp
+      consumer: ""
+      autoAck: false
+      exclusive: false
+      noLocal: false
+      noWait: false
+      args:
+        x-consumer-timeout: 60000
+        x-consumer-prefetch-count: 5
+    otp_routing_key: otp
   chat:
     chat_id_exchange:
       name: chat_id
@@ -48,3 +74,4 @@ rabbit_mq:
         x-consumer-timeout: 60000
         x-consumer-prefetch-count: 5
     notification_routing_key: notification
+  
